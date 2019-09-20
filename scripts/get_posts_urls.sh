@@ -3,6 +3,7 @@
 set -e
 
 subreddit="$1"
+sort=hot
 limit=50
 
 
@@ -32,7 +33,13 @@ requires jq >/dev/null
 
 echo "$subreddit" | grep -E 'r\/\w+' >/dev/null || usage
 
+# shifts argument so now $1 points to the next argument
 shift
+
+# getopts allows you define options
+# while s option with : argument
+# 1: $opts = s, $OPTARG gets the option argument
+# 2: $opts = l
 while getopts "s:l:" opts; do
     case "${opts}" in
         s)
