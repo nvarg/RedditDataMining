@@ -14,7 +14,8 @@ reddit_api()
 
 usage()
 {
-    echo "Usage: $0 [-l <limit>] [-s <sort_by>]"
+    echo "Usage: $0 r/<subreddit> [-l <limit>] [-s <sort_by>]"
+    exit 1
 }
 
 
