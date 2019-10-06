@@ -1,7 +1,8 @@
 #!/usr/bin/env sh
 
 set -e
-. ./utils.sh
+
+. "$(dirname $0)/utils.sh"
 
 usage() {
     echo "Usage: $0 /r/<subreddit>/comments/<article>/<title>/"
