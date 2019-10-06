@@ -1,15 +1,16 @@
 #!/usr/bin/env sh
 
 set -e
+. ./utils.sh
 
 subreddit="$1"
+sortby="hot"
 limit=50
-
 
 reddit_api()
 {
-    curl -s -H "User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:69.0) Gecko/20100101 Firefox/69.0" https://www.reddit.com/$1/$2/.json |
-        jq -r --argjson limit $3 '.data | .children[:$limit] | .[].data.url'
+    curl -s -H "User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:69.0) Gecko/20100101 Firefox/69.0" "https://www.reddit.com/$1/$2/.json" |
+        jq -r --argjson limit $3 '.data.children[:$limit] | .[] | select(.kind=="t3") | .data.permalink'
 }
 
 usage()
@@ -17,25 +18,15 @@ usage()
     echo "Usage: $0 [-l <limit>] [-s <sort_by>]"
 }
 
-
-requires() {
-    if ! [ -x "$(command -v $1)" ]; then
-        echo "Error: $0 requires $1, but it is not installed." >&2
-        echo "Error: Aborting." >&2
-        exit 1
-    fi
-}
-
 requires curl >/dev/null
 requires jq >/dev/null
-
 echo "$subreddit" | grep -E 'r\/\w+' >/dev/null || usage
 
 shift
 while getopts "s:l:" opts; do
     case "${opts}" in
         s)
-            sort="$OPTARG"
+            sortby="$OPTARG"
             ;;
         l)
             limit="$OPTARG"
@@ -46,5 +37,5 @@ while getopts "s:l:" opts; do
     esac
 done
 
-reddit_api "$subreddit" "$sort" "$limit"
+reddit_api "$subreddit" "$sortby" "$limit"
 
