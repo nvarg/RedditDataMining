@@ -4,7 +4,11 @@ set -e
 . ./utils.sh
 
 subreddit="$1"
+<<<<<<< HEAD
 sortby="hot"
+=======
+sort=hot
+>>>>>>> 54ac0c0e2b4936fbca677ac380c503e85558cf96
 limit=50
 
 reddit_api()
@@ -15,14 +19,21 @@ reddit_api()
 
 usage()
 {
-    echo "Usage: $0 [-l <limit>] [-s <sort_by>]"
+    echo "Usage: $0 r/<subreddit> [-l <limit>] [-s <sort_by>]"
+    exit 1
 }
 
 requires curl >/dev/null
 requires jq >/dev/null
 echo "$subreddit" | grep -E 'r\/\w+' >/dev/null || usage
 
+# shifts argument so now $1 points to the next argument
 shift
+
+# getopts allows you define options
+# while s option with : argument
+# 1: $opts = s, $OPTARG gets the option argument
+# 2: $opts = l
 while getopts "s:l:" opts; do
     case "${opts}" in
         s)
