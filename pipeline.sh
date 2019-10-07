@@ -1,0 +1,1 @@
+cat "$(dirname $0)/sublist"| xargs -n1 -I'{}' "$(dirname $0)/scripts/get_posts_urls.sh" '{}' -s hot | xargs -n1 "$(dirname $0)/scripts/get_comments.sh" | jq -rsfc "$(dirname $0)/scripts/flatten_comment_lists.jq" > "$(dirname $0)/data/$(date +%m_%d_%Y.json)"
