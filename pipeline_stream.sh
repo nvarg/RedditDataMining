@@ -1,13 +1,13 @@
 #!/usr/bin/env sh
 
-tmpdir=$(mktemp -t reddit.XXXXX)
-trap "rm $tmpdir -R" INT QUIT TERM EXIT
+tmpdir=$(mktemp -d data/reddit.XXXXX)
+trap 'rm -rf $tmpdir; exit' EXIT INT
 
 while read subreddit; do
     echo "Reading posts from /$subreddit."
     for post in $($(dirname $0)/scripts/get_posts_urls.sh $subreddit -s hot); do
-        ($(dirname $0)/scripts/get_comments.sh $post \
-            > $tmpdir/$(basename $post) &)
+        $(dirname $0)/scripts/get_comments.sh $post \
+            > $tmpdir/$(basename subreddit)_$(basename $post).json &
     done
 done < "$(dirname $0)/sublist"
 echo "Working..."
