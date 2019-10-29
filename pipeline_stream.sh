@@ -8,7 +8,7 @@ while read subreddit; do
     echo "Reading posts from /$subreddit."
     for post in $($(dirname $0)/scripts/get_posts_urls.sh $subreddit -s hot); do
         $(dirname $0)/scripts/get_comments.sh $post \
-            > $tmpdir/$(basename subreddit)_$(basename $post).json &
+            > $tmpdir/$(basename $subreddit)_$(basename $post).json &
     done
 done < "$(dirname $0)/sublist"
 echo "Working..."
