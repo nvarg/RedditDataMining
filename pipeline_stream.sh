@@ -1,6 +1,7 @@
 #!/usr/bin/env sh
 
-tmpdir=$(mktemp -d data/reddit.XXXXX)
+mkdir -p $(dirname $0)/data
+tmpdir=$(mktemp -d $(dirname $0)/data/reddit.XXXXX)
 trap 'rm -rf $tmpdir; exit' EXIT INT
 
 while read subreddit; do
@@ -16,7 +17,7 @@ wait
 for tmp in $tmpdir/*; do
     jq --stream -nrfc \
         "$(dirname $0)/scripts/flatten_comment_lists_streaming.jq" "$tmp" \
-        >> "$(dirname $0)/data/$(date +%m_%d_%Y_test.json)"
+        >> "$(dirname $0)/data/$(date +%m_%d_%Y.json)"
 done
 echo "Done."
 
